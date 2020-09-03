@@ -1,6 +1,6 @@
-import { startOfHour } from 'date-fns';
-import Appointment from '../models/Appointment';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import { startOfHour } from "date-fns";
+import Appointment from "../models/Appointment";
+import AppointmentsRepository from "../repositories/AppointmentsRepository";
 
 interface Request {
   provider: string;
@@ -22,7 +22,7 @@ class CreateAppointmentService {
     );
 
     if (findConflictingAppointment) {
-      throw Error('Time slot already taken');
+      throw Error("Time slot already taken");
     }
 
     const appointment = this.appointmentsRepository.create({

@@ -1,5 +1,5 @@
-import { isEqual } from 'date-fns';
-import Appointment from '../models/Appointment';
+import { isEqual } from "date-fns";
+import Appointment from "../models/Appointment";
 
 // DTO = Data Transfer Object
 interface CreateAppointmentDTO {
@@ -27,7 +27,7 @@ class ApppointmentsRepository {
   }
 
   public findByDate(date: Date): Appointment | null {
-    const findAppointment = this.appointments.find(appointment => {
+    const findAppointment = this.appointments.find((appointment) => {
       return isEqual(date, appointment.date);
     });
 
