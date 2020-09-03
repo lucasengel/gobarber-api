@@ -7,8 +7,9 @@
     "build": "tsc",
     "dev:server": "ts-node-dev --inspect --transpile-only --respawn --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
-    "migration:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -n",
-    "migration:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run"
+    "mig:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -n",
+    "mig:revert": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert",
+    "mig:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run"
   },
   "keywords": [],
   "author": "Lucas Engel",
@@ -17,6 +18,7 @@
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
     "pg": "^8.3.3",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.25",
     "uuid": "^8.3.0"
   },
