@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import authConfig from "../config/auth";
 
 import User from "../models/Users";
 
@@ -27,9 +28,11 @@ class CreateAppointmentService {
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) throw new Error("User/Password doesn't match");
 
-    const token = sign({}, "121A6678889EC2BDA06EE4AF6B29BA35", {
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign({}, secret, {
       subject: user.id,
-      expiresIn: "1w",
+      expiresIn,
     });
 
     return {
