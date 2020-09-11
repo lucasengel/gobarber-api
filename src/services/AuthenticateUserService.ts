@@ -1,8 +1,9 @@
 import { getRepository } from "typeorm";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
-import authConfig from "../config/auth";
 
+import authConfig from "../config/auth";
+import AppError from "../errors/AppError";
 import User from "../models/Users";
 
 interface Request {
@@ -21,12 +22,12 @@ class CreateAppointmentService {
 
     const user = await usersRepository.findOne({ where: { email } });
 
-    if (!user) throw new Error("User/Password doesn't match");
+    if (!user) throw new AppError("User/Password doesn't match", 401);
 
     // password - non-hashed
     // user.password - hashed
     const passwordMatch = await compare(password, user.password);
-    if (!passwordMatch) throw new Error("User/Password doesn't match");
+    if (!passwordMatch) throw new AppError("User/Password doesn't match", 401);
 
     const { secret, expiresIn } = authConfig.jwt;
 
