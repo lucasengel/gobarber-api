@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 
 import uploadConfig from "../config/upload";
-import User from "../models/Users";
+import User from "../models/User";
 import AppError from "../errors/AppError";
 
 interface Request {
