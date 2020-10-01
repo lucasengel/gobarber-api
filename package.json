@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev:server": "ts-node-dev --inspect --transpile-only --respawn --ignore-watch node_modules src/server.ts",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
-    "mig:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -n",
-    "mig:revert": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert",
-    "mig:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run"
+    "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --respawn --ignore-watch node_modules src/shared/infra/http/server.ts",
+    "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -n",
+    "mig:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert",
+    "mig:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+    "start": "ts-node -r tsconfig-paths/register src/shared/infra/http/server.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "keywords": [],
   "author": "Lucas Engel",
@@ -44,6 +45,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.1.1",
     "ts-node-dev": "^1.0.0-pre.62",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.0.2"
   }
 }
