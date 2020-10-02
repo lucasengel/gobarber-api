@@ -1,22 +1,21 @@
 import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import Appointment from '../infra/typeorm/entities/Appointment';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
-interface Request {
+interface IRequest {
   provider_id: string;
   date: Date;
 }
 
 class CreateAppointmentService {
-  public async execute({ provider_id, date }: Request): Promise<Appointment> {
-    const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+  constructor(private appointmentsRepository: IAppointmentsRepository) { }
 
+  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
-    const findConflictingAppointment = await appointmentsRepository.findByDate(
+    const findConflictingAppointment = await this.appointmentsRepository.findByDate(
       appointmentDate,
     );
 
@@ -24,19 +23,10 @@ class CreateAppointmentService {
       throw new AppError('Time slot already taken');
     }
 
-    /**
-     * create() will only create the instance of the repository,
-     * not store in the database
-     */
-    const appointment = appointmentsRepository.create({
+    const appointment = this.appointmentsRepository.create({
       provider_id,
       date: appointmentDate,
     });
-
-    /**
-     * save() will then store the instance
-     */
-    await appointmentsRepository.save(appointment);
 
     return appointment;
   }
