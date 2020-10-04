@@ -18,7 +18,7 @@ interface IResponse {
 }
 
 @injectable()
-class CreateAppointmentService {
+class AuthenticateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -49,4 +49,4 @@ class CreateAppointmentService {
   }
 }
 
-export default CreateAppointmentService;
+export default AuthenticateUserService;
