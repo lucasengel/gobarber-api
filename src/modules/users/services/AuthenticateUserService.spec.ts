@@ -66,7 +66,7 @@ describe('AuthenticateUser', () => {
       password: 'ghost',
     };
 
-    const user = await createUser.execute(userData);
+    await createUser.execute(userData);
 
     expect(
       authenticateUser.execute({

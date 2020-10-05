@@ -5,6 +5,7 @@ import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import { inject, injectable } from 'tsyringe';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
@@ -16,6 +17,7 @@ interface IRequest {
 class UpdateUserAvatarService {
   constructor(
     @inject('UsersRepository') private usersRepository: IUsersRepository,
+    @inject('StorageProvider') private storageProvider: IStorageProvider,
   ) { }
 
   public async execute({ user_id, avatarFileName }: IRequest): Promise<User> {
@@ -24,19 +26,12 @@ class UpdateUserAvatarService {
     if (!user) throw Error('Only authenticated users can change their avatar.');
 
     if (user.avatar) {
-      const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
-      const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
-
-      if (userAvatarFileExists) {
-        try {
-          await fs.promises.unlink(userAvatarFilePath);
-        } catch (error) {
-          throw new AppError(error, 401);
-        }
-      }
+      await this.storageProvider.deleteFile(user.avatar);
     }
 
-    user.avatar = avatarFileName;
+    const filename = await this.storageProvider.saveFile(avatarFileName);
+
+    user.avatar = filename;
 
     await this.usersRepository.save(user);
 
