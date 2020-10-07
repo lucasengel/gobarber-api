@@ -32,7 +32,6 @@ describe('SendForgotPasswordEmail', () => {
     });
 
     await sendForgotPasswordEmail.execute({
-      id: user.id,
       email: user.email,
     });
 
@@ -44,7 +43,6 @@ describe('SendForgotPasswordEmail', () => {
 
     await expect(
       sendForgotPasswordEmail.execute({
-        id: '1312312',
         email: 'john@got.com',
       }),
     ).rejects.toBeInstanceOf(AppError);
@@ -62,7 +60,6 @@ describe('SendForgotPasswordEmail', () => {
     });
 
     await sendForgotPasswordEmail.execute({
-      id: user.id,
       email: user.email,
     });
 

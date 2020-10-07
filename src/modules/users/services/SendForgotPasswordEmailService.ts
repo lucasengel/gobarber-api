@@ -6,7 +6,6 @@ import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokesRepository';
 
 interface IRequest {
-  id: string;
   email: string;
 }
 
@@ -23,11 +22,12 @@ class SendForgotPasswordEmailService {
     private emailProvider: IEmailProvider,
   ) { }
 
-  public async execute({ id, email }: IRequest): Promise<void> {
+  public async execute({ email }: IRequest): Promise<void> {
     const user = await this.usersRepository.findByEmail(email);
-    const token = await this.userTokensRepository.generate(id);
 
     if (!user) throw new AppError('Email could not be found.');
+
+    const token = await this.userTokensRepository.generate(user.id);
 
     this.emailProvider.sendEmail(
       email,
