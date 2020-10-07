@@ -1,3 +1,4 @@
+import path from 'path';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
@@ -29,6 +30,13 @@ class SendForgotPasswordEmailService {
 
     const token = await this.userTokensRepository.generate(user.id);
 
+    const forgotPasswordTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'forgot_password.hbs',
+    );
+
     await this.emailProvider.sendEmail({
       to: {
         name: user.name,
@@ -36,11 +44,11 @@ class SendForgotPasswordEmailService {
       },
       subject: 'Password reset requested',
       templateData: {
-        template:
-          'Hi, {{name}}.\nUse the following link (within 2 hours) to reset your password: http://locahost:3333/password/reset?token={{token}}',
+        file: forgotPasswordTemplate,
         variables: {
           name: user.name,
           token: token.token,
+          link: `http://localhost:3000/reset-password?token=${token.token}`,
         },
       },
     });

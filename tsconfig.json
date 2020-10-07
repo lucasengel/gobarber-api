@@ -18,6 +18,8 @@
         "shared/*"
       ]
     },
+    "removeComments": true,
+    "importHelpers": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
