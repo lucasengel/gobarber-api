@@ -29,9 +29,9 @@ class SendForgotPasswordEmailService {
 
     const token = await this.userTokensRepository.generate(user.id);
 
-    this.emailProvider.sendEmail(
+    await this.emailProvider.sendEmail(
       email,
-      `Password reset required with token ${token}`,
+      `Password reset required with token ${token.token}`,
     );
   }
 }
