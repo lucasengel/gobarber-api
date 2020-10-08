@@ -35,7 +35,7 @@ class ResetPasswordService {
       throw new AppError('User token does has expired.');
     }
 
-    const user = await this.usersRepository.findById(userToken?.user_id);
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) {
       throw new AppError('User does not exist.');
