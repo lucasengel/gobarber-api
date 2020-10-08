@@ -3,12 +3,18 @@ import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import CreateUserService from './CreateUserService';
 
-describe('CreateUser', () => {
-  test('It should be able to create a user.', async () => {
-    const usersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(usersRepository, hashProvider);
+let usersRepository: FakeUsersRepository;
+let hashProvider: FakeHashProvider;
+let createUser: CreateUserService;
 
+describe('CreateUser', () => {
+  beforeEach(() => {
+    usersRepository = new FakeUsersRepository();
+    hashProvider = new FakeHashProvider();
+    createUser = new CreateUserService(usersRepository, hashProvider);
+  });
+
+  it('should be able to create a user.', async () => {
     const user = await createUser.execute({
       name: 'John Snow',
       email: 'john@got.com',
@@ -18,11 +24,7 @@ describe('CreateUser', () => {
     expect(user).toHaveProperty('id');
   });
 
-  test('It should NOT be able to create a user when email already exists.', async () => {
-    const usersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-    const createUser = new CreateUserService(usersRepository, hashProvider);
-
+  it('should NOT be able to create a user when email already exists.', async () => {
     await createUser.execute({
       name: 'John Snow',
       email: 'john@got.com',

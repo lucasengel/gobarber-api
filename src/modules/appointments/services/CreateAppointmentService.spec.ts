@@ -2,39 +2,40 @@ import AppError from '@shared/errors/AppError';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
-describe('CreateAppointment', () => {
-  test('It should be able to create a new appointment.', async () => {
-    const appointmentsRepository = new FakeAppointmentsRepository();
-    const createAppointment = new CreateAppointmentService(
-      appointmentsRepository,
-    );
+let appointmentsRepository: FakeAppointmentsRepository;
+let createAppointment: CreateAppointmentService;
 
+describe('CreateAppointment', () => {
+  beforeEach(() => {
+    appointmentsRepository = new FakeAppointmentsRepository();
+    createAppointment = new CreateAppointmentService(appointmentsRepository);
+  });
+
+  it('should be able to create a new appointment.', async () => {
     const appointment = await createAppointment.execute({
       date: new Date(),
-      provider_id: 'asbdkdaflvakdsjhfblds',
+      provider_id: 'non-existing-provider-id',
     });
 
     expect(appointment).toHaveProperty('id');
-    expect(appointment.provider_id).toBe('asbdkdaflvakdsjhfblds');
+    expect(appointment.provider_id).toBe('non-existing-provider-id');
   });
 
-  test('It should not be able to create appointments at the same time.', async () => {
-    const appointmentsRepository = new FakeAppointmentsRepository();
-    const createAppointment = new CreateAppointmentService(
-      appointmentsRepository,
-    );
+  it('should NOT be able to create appointments at the same time.', async () => {
+    appointmentsRepository = new FakeAppointmentsRepository();
+    createAppointment = new CreateAppointmentService(appointmentsRepository);
 
     const appointmentDate = new Date();
 
     await createAppointment.execute({
       date: appointmentDate,
-      provider_id: 'asbdkdaflvakdsjhfblds',
+      provider_id: 'non-existing-provider-id',
     });
 
     await expect(
       createAppointment.execute({
         date: appointmentDate,
-        provider_id: 'asbdkdaflvakdsjhfblds',
+        provider_id: 'non-existing-provider-id',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

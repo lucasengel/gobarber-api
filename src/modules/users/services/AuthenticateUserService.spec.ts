@@ -1,21 +1,27 @@
 import AppError from '@shared/errors/AppError';
-import { getOverlappingDaysInIntervals } from 'date-fns';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import CreateUserService from './CreateUserService';
 import AuthenticateUserService from './AuthenticateUserService';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
-describe('AuthenticateUser', () => {
-  it('should be able to authenticate user.', async () => {
-    const usersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
+let usersRepository: FakeUsersRepository;
+let hashProvider: FakeHashProvider;
+let createUser: CreateUserService;
+let authenticateUser: AuthenticateUserService;
 
-    const createUser = new CreateUserService(usersRepository, hashProvider);
-    const authenticateUser = new AuthenticateUserService(
+describe('AuthenticateUser', () => {
+  beforeEach(() => {
+    usersRepository = new FakeUsersRepository();
+    hashProvider = new FakeHashProvider();
+
+    createUser = new CreateUserService(usersRepository, hashProvider);
+    authenticateUser = new AuthenticateUserService(
       usersRepository,
       hashProvider,
     );
+  });
 
+  it('should be able to authenticate user.', async () => {
     const userData = {
       name: 'John Snow',
       email: 'john@got.com',
@@ -33,15 +39,7 @@ describe('AuthenticateUser', () => {
     expect(response.user).toEqual(user);
   });
 
-  it('should not be able to authenticate with non-existing credentials.', async () => {
-    const usersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-
-    const authenticateUser = new AuthenticateUserService(
-      usersRepository,
-      hashProvider,
-    );
-
+  it('should NOT be able to authenticate with non-existing credentials.', async () => {
     await expect(
       authenticateUser.execute({
         email: 'john@got.com',
@@ -50,16 +48,7 @@ describe('AuthenticateUser', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to authenticate user with wrong credentials.', async () => {
-    const usersRepository = new FakeUsersRepository();
-    const hashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(usersRepository, hashProvider);
-    const authenticateUser = new AuthenticateUserService(
-      usersRepository,
-      hashProvider,
-    );
-
+  it('should NOT be able to authenticate user with wrong credentials.', async () => {
     const userData = {
       name: 'John Snow',
       email: 'john@got.com',
