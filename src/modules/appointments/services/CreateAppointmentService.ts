@@ -6,18 +6,23 @@ import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface IRequest {
-  provider_id: string;
   date: Date;
+  provider_id: string;
+  user_id: string;
 }
 
 @injectable()
 class CreateAppointmentService {
   constructor(
-    @inject('AppointmentRepository')
+    @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
   ) { }
 
-  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
+  public async execute({
+    date,
+    provider_id,
+    user_id,
+  }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
     const findConflictingAppointment = await this.appointmentsRepository.findByDate(
@@ -29,8 +34,9 @@ class CreateAppointmentService {
     }
 
     const appointment = this.appointmentsRepository.create({
-      provider_id,
       date: appointmentDate,
+      provider_id,
+      user_id,
     });
 
     return appointment;
