@@ -23,14 +23,16 @@ class ListProviderMonthAvailabilityService {
 
   public async execute({
     provider_id,
-    month,
     year,
+    month,
   }: IRequest): Promise<IResponse> {
-    const appointments = await this.appointmentsRepository.findByMonth({
-      provider_id,
-      month,
-      year,
-    });
+    const appointments = await this.appointmentsRepository.findProviderAvailabilityByMonth(
+      {
+        provider_id,
+        year,
+        month,
+      },
+    );
 
     const daysInMonth = getDaysInMonth(new Date(year, month - 1));
 
