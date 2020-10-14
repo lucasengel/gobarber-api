@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import UpdateUserProfileService from '@modules/users/services/UpdateUserProfileService';
 import FetchUserProfileService from '@modules/users/services/FetchUserProfileService';
+import { classToClass } from 'class-transformer';
 
 class ProfileController {
   public async fetch(request: Request, response: Response): Promise<Response> {
@@ -11,14 +12,7 @@ class ProfileController {
 
     const user = await fetchUserProfile.execute({ user_id });
 
-    const noPasswordUser = {
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
-
-    return response.json(noPasswordUser);
+    return response.json(classToClass(user));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -35,14 +29,7 @@ class ProfileController {
       old_password,
     });
 
-    const noPasswordUser = {
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
-
-    return response.json(noPasswordUser);
+    return response.json(classToClass(user));
   }
 }
 
