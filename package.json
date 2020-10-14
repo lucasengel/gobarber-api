@@ -21,6 +21,7 @@
     "@types/mongodb": "^3.5.27",
     "@types/nodemailer": "^6.4.0",
     "bcryptjs": "^2.4.3",
+    "celebrate": "^13.0.3",
     "cors": "^2.8.5",
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
