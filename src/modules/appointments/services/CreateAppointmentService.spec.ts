@@ -1,3 +1,4 @@
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
 import AppError from '@shared/errors/AppError';
 import { addDays, setHours } from 'date-fns';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
@@ -5,11 +6,16 @@ import CreateAppointmentService from './CreateAppointmentService';
 
 let appointmentsRepository: FakeAppointmentsRepository;
 let createAppointment: CreateAppointmentService;
+let notificationsRepository: FakeNotificationsRepository;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     appointmentsRepository = new FakeAppointmentsRepository();
-    createAppointment = new CreateAppointmentService(appointmentsRepository);
+    notificationsRepository = new FakeNotificationsRepository();
+    createAppointment = new CreateAppointmentService(
+      appointmentsRepository,
+      notificationsRepository,
+    );
   });
 
   it('should be able to create a new appointment.', async () => {
@@ -24,9 +30,6 @@ describe('CreateAppointment', () => {
   });
 
   it('should NOT be able to create appointments at the same time.', async () => {
-    appointmentsRepository = new FakeAppointmentsRepository();
-    createAppointment = new CreateAppointmentService(appointmentsRepository);
-
     const appointmentDate = addDays(new Date(setHours(Date.now(), 9)), 3);
 
     await createAppointment.execute({
