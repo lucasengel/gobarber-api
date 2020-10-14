@@ -2,7 +2,7 @@ import path from 'path';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IEmailProvider from '@shared/container/providers/EmailProvider/models/IEmailProvider';
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
@@ -11,7 +11,7 @@ interface IRequest {
 }
 
 @injectable()
-class SendForgotPasswordEmailService {
+class SendForgotPasswordMailService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -19,14 +19,14 @@ class SendForgotPasswordEmailService {
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
 
-    @inject('EmailProvider')
-    private emailProvider: IEmailProvider,
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) { }
 
   public async execute({ email }: IRequest): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
+    const user = await this.usersRepository.findByMail(email);
 
-    if (!user) throw new AppError('Email could not be found.');
+    if (!user) throw new AppError('Mail could not be found.');
 
     const token = await this.userTokensRepository.generate(user.id);
 
@@ -37,7 +37,7 @@ class SendForgotPasswordEmailService {
       'forgot_password.hbs',
     );
 
-    await this.emailProvider.sendEmail({
+    await this.mailProvider.sendMail({
       to: {
         name: user.name,
         email: user.email,
@@ -55,4 +55,4 @@ class SendForgotPasswordEmailService {
   }
 }
 
-export default SendForgotPasswordEmailService;
+export default SendForgotPasswordMailService;

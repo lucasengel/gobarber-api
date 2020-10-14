@@ -28,7 +28,7 @@ class AuthenticateUserService {
   ) { }
 
   public async execute({ email, password }: IRequest): Promise<IResponse> {
-    const user = await this.usersRepository.findByEmail(email);
+    const user = await this.usersRepository.findByMail(email);
 
     if (!user) throw new AppError("User/Password doesn't match", 401);
 

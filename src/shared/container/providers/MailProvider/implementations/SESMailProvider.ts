@@ -2,19 +2,19 @@ import nodemailer, { Transporter } from 'nodemailer';
 import aws from 'aws-sdk';
 import { inject, injectable } from 'tsyringe';
 
-import emailConfig from '@config/mail';
+import mailConfig from '@config/mail';
 
-import IEmailTemplateProvider from '../../EmailTemplateProvider/models/IEmailTemplate';
-import ISendEmailDTO from '../dtos/ISendEmailDTO';
-import IEmailProvider from '../models/IEmailProvider';
+import IMailTemplateProvider from '../../MailTemplateProvider/models/IMailTemplate';
+import ISendMailDTO from '../dtos/ISendMailDTO';
+import IMailProvider from '../models/IMailProvider';
 
 @injectable()
-class SESEmailProvider implements IEmailProvider {
+class SESMailProvider implements IMailProvider {
   private client: Transporter;
 
   constructor(
-    @inject('EmailTemplateProvider')
-    private emailTemplateProvider: IEmailTemplateProvider,
+    @inject('MailTemplateProvider')
+    private mailTemplateProvider: IMailTemplateProvider,
   ) {
     this.client = nodemailer.createTransport({
       SES: new aws.SES({
@@ -23,13 +23,13 @@ class SESEmailProvider implements IEmailProvider {
     });
   }
 
-  public async sendEmail({
+  public async sendMail({
     to,
     from,
     subject,
     templateData,
-  }: ISendEmailDTO): Promise<void> {
-    const { name, address } = emailConfig.defaults.from;
+  }: ISendMailDTO): Promise<void> {
+    const { name, address } = mailConfig.defaults.from;
 
     await this.client.sendMail({
       from: {
@@ -41,9 +41,9 @@ class SESEmailProvider implements IEmailProvider {
         address: to.email,
       },
       subject,
-      html: await this.emailTemplateProvider.parse(templateData),
+      html: await this.mailTemplateProvider.parse(templateData),
     });
   }
 }
 
-export default SESEmailProvider;
+export default SESMailProvider;
