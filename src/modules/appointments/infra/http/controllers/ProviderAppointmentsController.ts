@@ -1,4 +1,4 @@
-import ListProviderAppointmentsService from '@modules/appointments/services/ListProviderAppointments';
+import ListProviderAppointmentsService from '@modules/appointments/services/ListProviderAppointmentsService';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
