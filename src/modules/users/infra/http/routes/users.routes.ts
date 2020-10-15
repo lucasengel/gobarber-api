@@ -10,7 +10,7 @@ import UsersAvatarController from '../controllers/UsersAvatarController';
 
 const usersController = new UsersController();
 const usersAvatarController = new UsersAvatarController();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 const usersRouter = Router();
 
 usersRouter.post(
