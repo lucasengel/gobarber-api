@@ -16,10 +16,11 @@ import '@shared/infra/typeorm';
 
 const app = express();
 
-app.use(rateLimiter);
 app.use(cors());
 app.use(express.json());
 app.use('/files', express.static(uploadConfig.uploadsFolder));
+// rateLimiter after static files so users can d/l assets with no limits
+app.use(rateLimiter);
 app.use(routes);
 app.use(errors());
 app.use(
