@@ -10,3 +10,4 @@ tmp/uploads/*
 !tmp/uploads/.gitkeep
 .env
 ormconfig.json
+dist
