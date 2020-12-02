@@ -10,7 +10,7 @@ Request body:
 
 ```json
 {
-  email: john@got.com
+  "email": "john@got.com"
 }
 ```
 
